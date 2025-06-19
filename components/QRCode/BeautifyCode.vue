@@ -18,8 +18,6 @@ const imageURL = ref<string>('')
 watch(() => props, () => init(), { deep: true, immediate: true })
 
 function init() {
-  console.log(123);
-
   loading.value = true
   const options = {
     data: props.value || 'https://uqrcode.cn/doc/',

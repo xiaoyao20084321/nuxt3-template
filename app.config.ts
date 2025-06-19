@@ -1,5 +1,5 @@
 export default defineAppConfig({
-  title: '',
+  title: 'nuxt3-app',
   saasId: 0,
 
   upload_url: '/upload',
@@ -20,7 +20,5 @@ export default defineAppConfig({
     warning: '#E6A23C',
     danger: '#F53F3F',
     info: '#909399',
-    // 主题内没有error
-    // error: '#F53F3F',
   },
 })

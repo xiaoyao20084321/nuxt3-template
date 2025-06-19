@@ -8,9 +8,11 @@ const { initTheme } = useTheme()
 const runtimeConfig = useRuntimeConfig()
 const appConfig = useAppConfig()
 // const nuxtApp = useNuxtApp()
+console.log(runtimeConfig);
 
 useHead({
   htmlAttrs: { lang: 'en' },
+  title: runtimeConfig.title,
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     { rel: 'stylesheet', href: '/css/quill@1.3.6/index.css' },
@@ -24,7 +26,6 @@ useHead({
 useSeoMeta({
   charset: 'utf-8',
   viewport: 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
-  title: runtimeConfig.public.title,
   keywords: '网站，后台，开发，外包，服务，公司，官网',
   description: '春花，秋月，夏日，冬雪。你若盛开，清风自来。心若浮沉，浅笑安然。',
   formatDetection: 'telephone=no',

@@ -11,14 +11,14 @@ const http = $fetch.create({
   credentials: 'omit', // 不携带 cookie 字段
 })
 
-// let isRefreshToken = false
+let isRefreshToken = false
 
 export function useHttpRequest(url: string, config?: FetchOptions, meta?: HttpMeta): Promise<any> {
   const runtimeConfig = useRuntimeConfig()
   const appConfig = useAppConfig()
   const token = getToken()
-
-  const baseURL = runtimeConfig.public.prefix || runtimeConfig.public.api.baseUrl
+  
+  const baseURL = runtimeConfig.public.apiBasePrefix || runtimeConfig.public.apiBaseUrl
 
   const onRequest = ({ options }) => {
     // 正确判断绝对URL
@@ -73,14 +73,12 @@ export function useHttpRequest(url: string, config?: FetchOptions, meta?: HttpMe
     })
   }
 
-  return http(url, { baseURL, ...config, onRequest, onResponse })
+
+  return http(url, { ...config, onRequest, onResponse })
 }
 
 function handleResponseError(url, response, options) {
   console.groupCollapsed('🚀 file: request.ts:80 🚀')
-  // console.error('错误接口', url)
-  // console.error('请求方式', options.method)
-  // console.error('错误码', response._data.code)
   console.error('错误提示', url, JSON.stringify(response))
   console.groupEnd()
 
@@ -89,26 +87,26 @@ function handleResponseError(url, response, options) {
 
 async function handleResponseAuth() {
   // const userPinia = useUserPinia()
-  // if (!isRefreshToken) {
-  //   isRefreshToken = true
-  //   if (!import.meta.client) return navigateTo(`/`)
-  //   try {
-  //     await ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', {
-  //       title: '温馨提示',
-  //       type: 'warning',
-  //       draggable: true,
-  //       confirmButtonText: '重新登录',
-  //       cancelButtonText: '取消',
-  //     })
-  //     // userPinia.ClearUserAuth()
-  //     clearError({ redirect: `/login?redirect=${location.pathname}${location.search}${location.hash}` })
-  //   }
-  //   catch {
-  //     // userPinia.ClearUserAuth()
-  //     clearError({ redirect: '/' })
-  //   }
-  //   finally {
-  //     isRefreshToken = false
-  //   }
-  // }
+  if (!isRefreshToken) {
+    isRefreshToken = true
+    if (!import.meta.client) return navigateTo(`/`)
+    try {
+      // await ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', {
+      //   title: '温馨提示',
+      //   type: 'warning',
+      //   draggable: true,
+      //   confirmButtonText: '重新登录',
+      //   cancelButtonText: '取消',
+      // })
+      // userPinia.ClearUserAuth()
+      // clearError({ redirect: `/login?redirect=${location.pathname}${location.search}${location.hash}` })
+    }
+    catch {
+      // userPinia.ClearUserAuth()
+      // clearError({ redirect: '/' })
+    }
+    finally {
+      isRefreshToken = false
+    }
+  }
 }

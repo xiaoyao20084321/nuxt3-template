@@ -1,9 +1,7 @@
 const {
   NUXT_PUBLIC_API_BASEURL,
   NUXT_PUBLIC_DELETE_CONSOLE,
-  NUXT_PUBLIC_TITLE,
   NUXT_PUBLIC_PREFIX,
-  NUXT_PUBLIC_PREVIEW_BASEURL,
 } = import.meta.env
 
 console.table([{
@@ -34,14 +32,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      title: NUXT_PUBLIC_TITLE,
-      prefix: NUXT_PUBLIC_PREFIX,
-      api: {
-        baseUrl: NUXT_PUBLIC_API_BASEURL,
-      },
-      preview: {
-        baseUrl: NUXT_PUBLIC_PREVIEW_BASEURL,
-      },
+      apiBasePrefix: '',
+      apiBaseUrl: '',
+      previewBaseUrl:''
     },
   },
 
@@ -153,8 +146,4 @@ export default defineNuxtConfig({
       drop: NUXT_PUBLIC_DELETE_CONSOLE === 'true' ? ['console', 'debugger'] : [],
     },
   },
-
-  // experimental: {
-  //   renderJsonPayloads:false
-  // }
 })
