@@ -1,0 +1,76 @@
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+  font-size: var(--el-font-size-extra-small);
+  color: var(--el-text-color-primary);
+  background: #fcfcfc;
+  font-family: var(--el-font-family);
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  outline: none;
+  border: 0 none;
+  background: transparent;
+  font-size: inherit;
+  color: inherit;
+}
+
+// input 输入框 autocomplete=true 历史记录框样式修改
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  // 选中历史记录输入框背景颜色 box-shadow
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+  // 背景颜色
+  // background-color: inherit !important;
+  // 切换动画;时间设置久一点就可以变成透明色，与背景颜色一样，时间不要设置太短
+  -webkit-transition: background-color 60000s ease-in-out 0s !important;
+  transition: background-color 60000s ease-in-out 0s !important;
+  // 选中历史记录文字颜色
+  -webkit-text-fill-color: inherit;
+  // 背景裁剪区域，加上该属性，背景只会显示输入框中的文本
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: inherit;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.nuxt-link {
+  cursor: pointer;
+  font-size: 12px;
+  text-underline-offset: 4px;
+
+  &--primary {
+    color: var(--el-color-primary);
+  }
+}
+
+.text-align-last-justify {
+  text-align: justify;
+  text-align-last: justify;
+}
