@@ -1,4 +1,3 @@
-// plugins/eruda.client.ts
 let erudaInstance: any = null
 
 export default defineNuxtPlugin((nuxtApp) => {

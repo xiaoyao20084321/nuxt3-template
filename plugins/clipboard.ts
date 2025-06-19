@@ -1,4 +1,4 @@
-// v-clipboard="copyText"
+// <div v-clipboard="这是要复制的文本"></div>
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.directive('clipboard', {
     created(el, binding, vnode, prevVnode) {
