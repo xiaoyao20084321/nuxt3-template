@@ -6,11 +6,9 @@
 
 Nuxt3框架模板，只要Nuxt3官网更新就会跟着更新，安装不了的小伙伴可以直接拉取
 
-- [![code style](https://antfu.me/badge-code-style.svg)](https://github.com/antfu/eslint-config)
-
 ### 环境要求
 
-- Node.js v18.0.0以上
+- Node.js v20+
 
 ## Nuxt 3 项目启动
 
