@@ -1,14 +1,15 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly NUXT_PUBLIC_TITLE: string
-  readonly NUXT_PUBLIC_API_BASEURL: string
-  readonly NUXT_PUBLIC_COOKIE_DOMAIN: string
-  readonly NUXT_PUBLIC_COOKIE_PATH: string
-  readonly NUXT_PUBLIC_COOKIE_SAMESITE: true | false | 'lax' | 'strict' | 'none' | undefined
-  readonly NUXT_PUBLIC_DELETE_CONSOLE: 'true' | 'false'
-  readonly NUXT_PUBLIC_PREFIX: string
-  readonly NUXT_PUBLIC_UPLOAD_BASEURL: string
+  /** 是否需要配置代理前缀 */
+  readonly NUXT_PUBLIC_API_BASE_PREFIX: string
+  /** 接口请求 */
+  readonly NUXT_PUBLIC_API_BASE_URL: string
+  /** 文件资源访问 */
+  readonly NUXT_PUBLIC_PREVIEW_BASE_URL: string
+  /** console 和 debugger */
+  readonly NUXT_PUBLIC_DELETE_CONSOLE: string
+
   // more env variables...
 }
 
