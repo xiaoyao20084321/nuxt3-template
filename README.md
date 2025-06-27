@@ -79,19 +79,7 @@ yarn install
 bun install
 ```
 
-### 3. 环境配置
-
-创建环境变量文件：
-
-```bash
-# 开发环境
-cp .env.example .env.development
-
-# 生产环境
-cp .env.example .env.production
-```
-
-### 4. 启动开发服务器
+### 3. 启动开发服务器
 
 ```bash
 # 开发环境 (http://localhost:3000)
