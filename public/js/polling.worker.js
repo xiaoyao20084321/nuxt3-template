@@ -1,24 +1,24 @@
 // 创建轮询控制器
-const createPollingController = () => {
+function createPollingController() {
   let intervalId = null
   let count = 0
 
-  // 启动轮询
-  const startPolling = (interval) => {
-    stopPolling() // 确保先停止现有轮询
-
-    intervalId = setInterval(() => {
-      count++
-      self.postMessage({ type: 'tick', count })
-    }, interval || 1000 * 5)
-  }
-
   // 停止轮询
-  const stopPolling = () => {
+  function stopPolling() {
     if (intervalId) {
       clearInterval(intervalId)
       intervalId = null
     }
+  }
+
+  // 启动轮询
+  function startPolling(interval) {
+    stopPolling() // 确保先停止现有轮询
+
+    intervalId = setInterval(() => {
+      count++
+      globalThis.postMessage({ type: 'tick', count })
+    }, interval || 1000 * 5)
   }
 
   return {
@@ -31,7 +31,7 @@ const createPollingController = () => {
 const pollingController = createPollingController()
 
 // 处理主线程消息
-self.onmessage = function (e) {
+globalThis.onmessage = function (e) {
   const { action, interval } = e.data
   switch (action) {
     case 'start':

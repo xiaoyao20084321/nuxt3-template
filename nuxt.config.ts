@@ -1,13 +1,9 @@
 const {
-  NUXT_PUBLIC_API_BASEURL,
   NUXT_PUBLIC_DELETE_CONSOLE,
-  NUXT_PUBLIC_PREFIX,
+  NUXT_PUBLIC_API_BASE_PREFIX,
+  NUXT_PUBLIC_API_BASE_URL,
+  NUXT_PUBLIC_PREVIEW_BASE_URL,
 } = import.meta.env
-
-console.table([{
-  mode: process.env.NODE_ENV,
-  NUXT_PUBLIC_PREFIX,
-}])
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -25,35 +21,27 @@ export default defineNuxtConfig({
     'nuxt-lodash',
     'nuxt-typed-router',
   ],
-  imports: { dirs: ['types', 'stores', 'constants'] },
+  imports: { dirs: ['types', 'stores', 'constants', 'apis'] },
   devtools: { enabled: true },
   typescript: { strict: false, shim: false },
-  css: ['@unocss/reset/tailwind.css', '@unocss/reset/tailwind-compat.css', '~/assets/scss/element/index.scss', '~/assets/scss/index.scss'],
+  css: [
+    '@unocss/reset/tailwind.css',
+    '@unocss/reset/tailwind-compat.css',
+    '~/assets/scss/element/index.scss',
+    '~/assets/scss/index.scss',
+  ],
 
   runtimeConfig: {
     public: {
-      apiBasePrefix: '',
-      apiBaseUrl: '',
-      previewBaseUrl:''
+      apiBasePrefix: NUXT_PUBLIC_API_BASE_PREFIX || '/api',
+      apiBaseUrl: NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3001',
+      previewBaseUrl: NUXT_PUBLIC_PREVIEW_BASE_URL || 'http://localhost:3001',
+      deleteConsole: NUXT_PUBLIC_DELETE_CONSOLE === 'true',
     },
   },
 
   nitro: {
     compressPublicAssets: true,
-    devProxy: {
-      [NUXT_PUBLIC_PREFIX]: {
-        target: NUXT_PUBLIC_API_BASEURL,
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-        prependPath: true,
-      },
-    },
-    routeRules: {
-      [`${NUXT_PUBLIC_PREFIX}/**`]: {
-        proxy: `${NUXT_PUBLIC_API_BASEURL}/**`,
-      },
-    },
   },
 
   eslint: {
@@ -65,30 +53,38 @@ export default defineNuxtConfig({
   dayjs: {
     plugins: ['duration', 'relativeTime'],
     locales: ['en', 'zh-cn'],
-    defaultLocale: ['zh-cn', {
-      relativeTime: {
-        future: '刚刚',
-        past: '%s前',
-        s: '几秒',
-        m: '1 分钟',
-        mm: '%d 分钟',
-        h: '1 小时',
-        hh: '%d 小时',
-        d: '1 天',
-        dd: '%d 天',
-        M: '1 个月',
-        MM: '%d 个月',
-        y: '1 年',
-        yy: '%d 年',
+    defaultLocale: [
+      'zh-cn',
+      {
+        relativeTime: {
+          future: '刚刚',
+          past: '%s前',
+          s: '几秒',
+          m: '1 分钟',
+          mm: '%d 分钟',
+          h: '1 小时',
+          hh: '%d 小时',
+          d: '1 天',
+          dd: '%d 天',
+          M: '1 个月',
+          MM: '%d 个月',
+          y: '1 年',
+          yy: '%d 年',
+        },
       },
-    }],
+    ],
   },
 
   elementPlus: {
     icon: 'ElIcon',
     importStyle: 'scss',
     defaultLocale: 'zh-cn',
-    installMethods: ['ElLoading', 'ElMessage', 'ElMessageBox', 'ElNotification'],
+    installMethods: [
+      'ElLoading',
+      'ElMessage',
+      'ElMessageBox',
+      'ElNotification',
+    ],
   },
 
   i18n: {
@@ -99,7 +95,8 @@ export default defineNuxtConfig({
     ],
     defaultLocale: 'zh', // 默认语言
     strategy: 'no_prefix', // 路由策略：no_prefix / prefix_except_default / prefix
-    detectBrowserLanguage: { // 自动检测浏览器语言
+    detectBrowserLanguage: {
+      // 自动检测浏览器语言
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
@@ -143,7 +140,8 @@ export default defineNuxtConfig({
       commonjsOptions: { transformMixedEsModules: true },
     },
     esbuild: {
-      drop: NUXT_PUBLIC_DELETE_CONSOLE === 'true' ? ['console', 'debugger'] : [],
+      drop:
+        NUXT_PUBLIC_DELETE_CONSOLE === 'true' ? ['console', 'debugger'] : [],
     },
   },
 })

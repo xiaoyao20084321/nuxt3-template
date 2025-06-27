@@ -8,7 +8,7 @@ const { initTheme } = useTheme()
 const runtimeConfig = useRuntimeConfig()
 const appConfig = useAppConfig()
 // const nuxtApp = useNuxtApp()
-console.log(runtimeConfig);
+console.log(runtimeConfig)
 
 useHead({
   htmlAttrs: { lang: 'en' },
@@ -54,7 +54,10 @@ function themeRgbaChange(value = null, item) {
         <template v-for="(item, index) in themeColors" :key="index">
           <div flex flex-col items-center justify-center>
             <div>
-              <el-color-picker :model-value="item.value" :predefine="colors" show-alpha @change="themeRgbaChange($event, item)" />
+              <el-color-picker
+                :model-value="item.value" :predefine="colors" show-alpha
+                @change="themeRgbaChange($event, item)"
+              />
             </div>
             <div>{{ item.label }}</div>
           </div>

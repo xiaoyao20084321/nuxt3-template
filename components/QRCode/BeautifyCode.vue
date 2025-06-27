@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UQRCode from 'uqrcodejs'
 
-
 interface Props {
   value?: string
   options?: any
