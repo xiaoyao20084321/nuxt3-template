@@ -6,6 +6,12 @@ declare module '#app' {
     middleware?: string[]
     /** 面包屑 */
     breadcrumbs?: any[]
+    /** 页面权限配置 */
+    permissions?: string[]
+    /** 页面标题 */
+    title?: string
+    /** 页面描述 */
+    description?: string
   }
 }
 

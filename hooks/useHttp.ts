@@ -4,13 +4,32 @@ export interface ResOptions<T> {
   data: T
   code: number
   msg: string
-  success?: boolean
 }
 
-export interface HttpMeta {
-  auth?: boolean
-  toast?: boolean
-  catch?: boolean
+// Token刷新相关状态
+let isRefreshing = false // 是否正在刷新token
+let failedQueue: Array<{
+  resolve: (value: any) => void
+  reject: (reason: any) => void
+  config: any
+}> = [] // 失败请求队列
+
+// 处理队列中的请求
+function processQueue(error: any, token: string | null = null) {
+  failedQueue.forEach(({ resolve, reject, config }) => {
+    if (error) {
+      reject(error)
+    }
+    else {
+      // 更新请求头中的token
+      if (token && config.headers) {
+        config.headers.set('Authorization', `Bearer ${token}`)
+      }
+      resolve(config)
+    }
+  })
+
+  failedQueue = []
 }
 
 // 参数序列化函数 - 处理GET请求的数组参数
@@ -45,10 +64,8 @@ function handleError<T>(
     500: () => err('服务器内部错误'),
     403: () => err('没有权限访问该资源'),
     401: () => {
-      err('登录状态已过期，需要重新登录')
-      // 清除token并跳转到登录页
-      removeToken()
-      navigateTo('/')
+      // 401错误在响应拦截器中处理，这里不需要额外处理
+      console.log('401 Unauthorized - 将在响应拦截器中处理token刷新')
     },
     502: () => err('网关错误'),
     503: () => err('服务不可用'),
@@ -69,7 +86,8 @@ const fetch = $fetch.create({
     // 获取配置
     const runtimeConfig = useRuntimeConfig()
     const appConfig = useAppConfig()
-    const token = getToken()
+    const userStore = useUserStore()
+    const accessToken = userStore.userInfo.accessToken
 
     // 设置baseURL
     const baseURL
@@ -94,9 +112,8 @@ const fetch = $fetch.create({
     }
 
     // 添加认证token
-    if (token) {
-      options.headers.set('token', token)
-      options.headers.set('Authorization', `Bearer ${token}`)
+    if (accessToken) {
+      options.headers.set('Authorization', `Bearer ${accessToken}`)
     }
   },
 
@@ -135,7 +152,7 @@ const fetch = $fetch.create({
         return response._data
       }
       else if (response._data.code === 401) {
-        handleError(response)
+        // 401错误将在onResponseError中处理token刷新
         throw createError({
           statusCode: response._data.code,
           message: response._data.msg,
@@ -156,9 +173,71 @@ const fetch = $fetch.create({
   },
 
   // 错误处理
-  onResponseError({ response }) {
+  async onResponseError({ request, response, options }): Promise<void> {
+    // 检查是否是401错误且有refresh token
+    if (response?.status === 401 || response?._data?.code === 401) {
+      const userStore = useUserStore()
+      const refreshToken = userStore.userInfo.refreshToken
+
+      // 将当前请求添加到队列
+      const retryOriginalRequest = new Promise((resolve, reject) => {
+        failedQueue.push({
+          resolve: config => resolve(config),
+          reject: error => reject(error),
+          config: options,
+        })
+      })
+
+      // 如果有refreshToken且当前没有正在刷新的请求
+      if (refreshToken && !isRefreshing) {
+        isRefreshing = true
+
+        try {
+          // 调用刷新token的方法
+          const { refreshToken: refreshTokenFn } = useAuth()
+          const newToken = await refreshTokenFn()
+
+          // 刷新token成功
+          if (newToken) {
+            // 处理队列中的请求
+            processQueue(null, newToken)
+          }
+          else {
+            // 刷新token失败
+            processQueue(new Error('Token refresh failed'), null)
+            handleError(response)
+          }
+        }
+        catch (refreshError) {
+          // 刷新失败，处理队列
+          processQueue(refreshError, null)
+          handleError(response)
+        }
+        finally {
+          isRefreshing = false
+        }
+
+        // 返回原始请求的重试Promise
+        return retryOriginalRequest.then((config) => {
+          return $fetch(request, config as any)
+        }).catch(() => {
+          // 重试请求失败，继续处理错误
+          handleError(response)
+        }) as any
+      }
+      else if (refreshToken && isRefreshing) {
+        // 如果正在刷新，将请求加入队列并返回重试Promise
+        return retryOriginalRequest.then((config) => {
+          return $fetch(request, config as any)
+        }).catch(() => {
+          // 重试请求失败，继续处理错误
+          handleError(response)
+        }) as any
+      }
+    }
+
+    // 其他错误正常处理
     handleError(response)
-    return Promise.reject(response?._data ?? null)
   },
 })
 

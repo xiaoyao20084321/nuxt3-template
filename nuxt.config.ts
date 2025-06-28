@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     'nuxt-lodash',
     'nuxt-typed-router',
   ],
-  imports: { dirs: ['types', 'stores', 'constants', 'apis'] },
+  imports: { dirs: ['types', 'stores', 'constants', 'apis', 'hooks'] },
   devtools: { enabled: true },
   typescript: { strict: false, shim: false },
   css: [

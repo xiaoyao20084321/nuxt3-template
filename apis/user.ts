@@ -1,5 +1,5 @@
 // 用户相关API接口
-import { useHttp } from '~/composables/useHttp'
+import { useHttp } from '~/hooks/useHttp'
 
 export interface LoginParams {
   username: string
@@ -8,11 +8,16 @@ export interface LoginParams {
 }
 
 export interface UserInfo {
-  id: number
-  username: string
-  email: string
+  id?: number
+  username?: string
+  userName?: string // 兼容新的字段名
+  userId?: string
+  email?: string
   avatar?: string
-  roles: string[]
+  isVip?: boolean // VIP用户，可以使用更高级的功能
+  userBtnPermission?: string[] // 用户按钮权限
+  accessToken?: string
+  refreshToken?: string
 }
 
 export interface RegisterParams {
@@ -22,12 +27,25 @@ export interface RegisterParams {
   captcha: string
 }
 
+// 新增的认证相关接口类型
+export interface LoginResponse {
+  accessToken: string
+  refreshToken: string
+  userInfo: UserInfo
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string
+  refreshToken: string
+}
+
 // 用户登录
 export async function postLogin(params: LoginParams) {
-  return useHttp.post<{ token: string, userInfo: UserInfo }>(
-    '/auth/login',
-    params,
-  )
+  return useHttp.post<LoginResponse>('/auth/login', params)
 }
 
 // 用户注册
@@ -59,25 +77,16 @@ export async function postLogout() {
 }
 
 // 刷新token
-export async function postRefreshToken() {
-  return useHttp.post<{ token: string }>('/auth/refresh')
+export async function postRefreshToken(data?: RefreshTokenRequest) {
+  const userStore = useUserStore()
+  const refreshToken = data?.refreshToken || userStore.userInfo.refreshToken
+
+  return useHttp.post<RefreshTokenResponse>('/auth/refresh', {
+    refreshToken,
+  })
 }
 
-// 获取用户列表（管理员）
-export async function getUserList(params: {
-  page?: number
-  pageSize?: number
-  keyword?: string
-}) {
-  return useHttp.get<{
-    list: UserInfo[]
-    total: number
-    page: number
-    pageSize: number
-  }>('/admin/users', params)
-}
-
-// 删除用户（管理员）
-export async function deleteUser(id: number) {
-  return useHttp.delete<{ message: string }>(`/admin/users/${id}`)
+// 验证token接口
+export async function verifyToken() {
+  return useHttp.get('/auth/verify')
 }
