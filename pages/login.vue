@@ -8,6 +8,14 @@ const { login, logout, isLoggedIn } = useAuth()
 const route = useRoute()
 const router = useRouter()
 
+// 如果已经登录，重定向到目标页面或首页
+watchEffect(() => {
+  if (isLoggedIn.value) {
+    const redirect = route.query.redirect as string
+    router.push(redirect || '/')
+  }
+})
+
 // 登录表单数据
 const loginForm = reactive({
   username: 'admin',

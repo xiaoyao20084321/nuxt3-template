@@ -48,7 +48,9 @@ function themeRgbaChange(value = null, item) {
   <div>
     <NuxtRouteAnnouncer />
     <el-config-provider size="default" :locale="zhCn" :message="{ max: 3 }">
-      <NuxtPage />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
 
       <div flex items-center class="fixed bottom-5vh left-5vw z-500 space-x-12px">
         <template v-for="(item, index) in themeColors" :key="index">

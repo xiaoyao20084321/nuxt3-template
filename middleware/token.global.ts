@@ -3,20 +3,25 @@
  * 实现路由拦截和权限控制
  */
 export default defineNuxtRouteMiddleware(async (to) => {
-  // 跳过服务端渲染时的检查，避免水合不匹配
-  if (import.meta.server) return
-
   const userStore = useUserStore()
+
+  // 检查是否需要登录
+  const needAuth = to.meta.auth === true
   const token = userStore.userInfo.accessToken
+
+  // 在服务端渲染时，如果用户未登录且访问需要认证的页面，直接重定向
+  if (import.meta.server) {
+    if (needAuth && !token) {
+      return navigateTo(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
+    }
+    return
+  }
 
   // 获取用户权限
   const userPermissionKeys = userStore.getUserPermissionKeys
 
   // 获取页面所需权限（从路由meta中获取）
   const requiredPermissions = (to.meta.permissions as string[]) || []
-
-  // 检查是否需要登录
-  const needAuth = to.meta.auth === true
 
   // 如果需要登录但用户未登录
   if (needAuth && !token) {
