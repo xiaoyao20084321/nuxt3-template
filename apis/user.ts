@@ -9,8 +9,7 @@ export interface LoginParams {
 
 export interface UserInfo {
   id?: number
-  username?: string
-  userName?: string // 兼容新的字段名
+  userName?: string
   userId?: string
   email?: string
   avatar?: string
