@@ -14,6 +14,22 @@
 
 ---
 
+## 👋 项目介绍
+
+这是一个基于 **Nuxt 3** 的现代化前端项目模板，特别适合：
+
+- 🔰 **前端新手**: 开箱即用，无需复杂配置
+- 🏢 **企业项目**: 完整的权限管理和用户认证系统
+- 🚀 **快速开发**: 集成了常用功能和最佳实践
+- 📱 **全端适配**: 支持桌面端和移动端
+
+### 🎯 适用场景
+- 管理后台系统
+- 企业官网
+- 用户中心
+- 内容管理系统
+- 任何需要用户登录和权限控制的 Web 应用
+
 ## ✨ 特性
 
 - 🎯 **最新技术栈**: Nuxt 3.17.5 + Vue 3.5 + TypeScript
@@ -58,12 +74,17 @@
 - **Node.js**: v20.0.0 或更高版本
 - **包管理器**: pnpm (推荐)
 
+> 💡 **新手提示**: 如果你还没有安装 pnpm，可以通过以下命令安装：
+> ```bash
+> npm install -g pnpm
+> ```
+
 ## 🚀 快速开始
 
 ### 1. 克隆项目
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/xiaoyao20084321/nuxt3-template.git
 cd nuxt3-template
 ```
 
@@ -72,18 +93,55 @@ cd nuxt3-template
 ```bash
 # 使用 pnpm 安装依赖
 pnpm install
+
+# 如果出现构建脚本警告，运行以下命令批准
+pnpm approve-builds
 ```
 
-### 3. 启动开发服务器
+### 3. 环境配置
+
+项目支持多环境配置，你可以根据需要创建对应的环境文件：
 
 ```bash
-# 开发环境 (http://localhost:3000)
+# 开发环境配置文件 (可选)
+.env.development
+
+# 生产环境配置文件 (可选)
+.env.production
+
+# 测试环境配置文件 (可选)
+.env.test
+```
+
+**环境变量示例**：
+```bash
+# API 配置
+NUXT_PUBLIC_API_BASE_PREFIX="/dev-api"
+NUXT_PUBLIC_API_BASE_URL="http://localhost:8080"
+NUXT_PUBLIC_PREVIEW_BASE_URL="http://localhost:8080"
+
+# 开发配置
+NUXT_PUBLIC_DELETE_CONSOLE=false
+```
+
+> 💡 **新手提示**: 环境文件是可选的，项目可以直接运行。如果需要连接后端 API，请根据上述示例配置相应的环境变量。
+
+### 4. 启动开发服务器
+
+```bash
+# 开发环境 (默认端口 3000，如果被占用会自动使用其他端口)
 pnpm dev
 
 # 指定环境启动
 pnpm dev:production  # 生产环境配置
 pnpm dev:test       # 测试环境配置
 ```
+
+🎉 **恭喜！** 项目启动成功后，你可以：
+- 打开浏览器访问显示的地址（通常是 http://localhost:3000）
+- 使用测试账号登录体验权限功能：
+  - **管理员**: admin / 123456
+  - **普通用户**: user / 123456
 
 ## 📦 构建部署
 
@@ -445,6 +503,37 @@ nuxt3-template/
 4. **持久化**: 用户信息会自动保存到本地存储，刷新页面后仍然有效
 5. **服务端渲染**: 权限检查在客户端进行，避免服务端渲染时的水合不匹配
 6. **错误处理**: 权限不足时显示403错误页面，Token刷新失败时自动跳转登录页
+
+## ❓ 常见问题
+
+### Q: 如何修改 API 接口地址？
+A: 在对应的环境变量文件中配置：
+```bash
+# .env.development (开发环境)
+NUXT_PUBLIC_API_BASE_PREFIX="/dev-api"
+NUXT_PUBLIC_API_BASE_URL="http://localhost:8080"
+NUXT_PUBLIC_PREVIEW_BASE_URL="http://localhost:8080"
+
+# .env.production (生产环境)
+NUXT_PUBLIC_API_BASE_PREFIX="/prod-api"
+NUXT_PUBLIC_API_BASE_URL="https://api.yoursite.com"
+NUXT_PUBLIC_PREVIEW_BASE_URL="https://api.yoursite.com"
+```
+
+> 💡 **说明**:
+> - `NUXT_PUBLIC_API_BASE_PREFIX`: API 路径前缀
+> - `NUXT_PUBLIC_API_BASE_URL`: API 服务器地址
+> - `NUXT_PUBLIC_PREVIEW_BASE_URL`: 文件资源访问地址
+
+### Q: 如何添加新的页面？
+A: 在 `pages/` 目录下创建 `.vue` 文件，Nuxt 会自动生成路由：
+```bash
+# 创建新页面
+touch pages/about.vue
+```
+
+### Q: 权限控制如何工作？
+A: 详见上方的 [🔐 权限控制系统](#-权限控制系统) 章节，包含完整的使用说明。
 
 ## 🤝 贡献指南
 
