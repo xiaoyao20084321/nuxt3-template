@@ -108,9 +108,6 @@ pnpm approve-builds
 
 # 生产环境配置文件 (可选)
 .env.production
-
-# 测试环境配置文件 (可选)
-.env.test
 ```
 
 **环境变量示例**：
