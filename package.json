@@ -16,7 +16,7 @@
     "analyze": "nuxt analyze --dotenv .env.production",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "eslint:cfg": "npx eslint-flat-config-viewer"
+    "eslint:cfg": "pnpm dlx eslint-flat-config-viewer"
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.1.3",
